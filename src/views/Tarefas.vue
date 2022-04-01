@@ -12,6 +12,8 @@ import Formulario from '@/components/Formulario.vue'
 import Tarefa from '@/components/Tarefa.vue'
 import Box from '@/components/Box.vue'
 import ITarefa from '@/interfaces/ITarefa'
+import { useStore } from "@/store";
+import { ADICIONA_TAREFA } from '@/store/tipo-mutacoes'
 
 export default defineComponent({
   name: 'App',
@@ -32,9 +34,18 @@ export default defineComponent({
   },
   methods: {
     salvarTarefa (tarefa: ITarefa) {
+      console.log('tarefa', tarefa)
+      this.store.commit(ADICIONA_TAREFA, tarefa)
       this.tarefas.push(tarefa)
     },
     
+  }, 
+  setup () {
+    const store = useStore()
+
+    return {
+      store,
+    }
   }
 });
 </script>
