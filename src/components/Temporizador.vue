@@ -34,7 +34,7 @@ export default defineComponent({
     }
   },
   methods: {
-    iniciar () {
+    iniciar (): void {
       // começar a contagem
       // 1 seg = 1000 ms
       this.cronometroRodando = true
@@ -42,12 +42,18 @@ export default defineComponent({
         this.tempoEmSegundos += 1        
       }, 1000)
     },
-    finalizar () {
-      this.cronometroRodando = false
-      clearInterval(this.cronometro)
+    finalizar (): void {
       this.$emit('aoTemporizadorFinalizado', this.tempoEmSegundos)
       this.tempoEmSegundos = 0
+      this.cronometroRodando = false
+      clearInterval(this.cronometro)
     }
   }
 });
 </script>
+
+<style scoped>
+.button {
+  margin-left: 8px;
+}
+</style>

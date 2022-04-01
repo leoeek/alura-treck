@@ -50,6 +50,7 @@ export default defineComponent({
     right: 0;
     top: 0;
     z-index: 120;
+    padding: 8px;
     width: 300px;
 }
 </style>

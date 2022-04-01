@@ -1,6 +1,5 @@
 import { createStore, Store, useStore as vuexUseStore } from "vuex";
 import { InjectionKey } from "vue";
-
 import IProjeto from "@/interfaces/IProjeto";
 import ITarefa from "@/interfaces/ITarefa";
 
@@ -13,7 +12,7 @@ import {
     REMOVE_TAREFA, 
     NOTIFICAR
 } from './tipo-mutacoes'
-import { INotificacao, TipoNotificacao } from "@/interfaces/INotificacao";
+import { INotificacao } from "@/interfaces/INotificacao";
 
 interface Estado {
     projetos: IProjeto[],
@@ -60,6 +59,7 @@ export const store = createStore<Estado>({
 
         [NOTIFICAR](state, novaNotificacao: INotificacao) {
             novaNotificacao.id = new Date().getTime()
+            console.log('aqui notificacao', novaNotificacao)
             state.notificacoes.push(novaNotificacao)
 
             setTimeout(() => {

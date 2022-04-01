@@ -59,6 +59,7 @@ export default defineComponent({
         descricao: this.descricao,
         projeto: this.projetos.find(proj => proj.id == this.idProjeto)
       })
+      
       this.descricao = ''
     }
   },
