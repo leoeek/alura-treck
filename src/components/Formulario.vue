@@ -1,102 +1,82 @@
 <template>
-  <section>
-    <form @submit.prevent="salvar">
-      <div class="field">
-        <label for="nomeDoProjeto" class="label">Nome do Projeto</label>
+  <div class="box formulario">
+    <div class="columns">
+      <div
+        class="column is-5"
+        role="form"
+        aria-label="Formulário para criação de uma nova tarefa"
+      >
         <input
           type="text"
-          class="input "
-          v-model="nomeDoProjeto"
-          id="nomeDoProjeto"
+          class="input"
+          placeholder="Qual tarefa você deseja iniciar?"
+          v-model="descricao"
         />
       </div>
-
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="button is-link" type="submit">Salvar</button>
-        </div>
-        <div class="control">
-          <button 
-            class="button is-link is-light" 
-            type="button"
-            @click="this.$router.push('/projetos')"
-          >
-            Voltar
-          </button>
+      <div class="column is-3">
+        <div class="select">
+          <select v-model="idProjeto">
+            <option value="">Selecione o projeto</option>
+            <option 
+              :value="projeto.id"
+              v-for="projeto in projetos"
+              :key="projeto.id"
+            >
+              {{ projeto.nome }}
+            </option>
+          </select>
         </div>
       </div>
-    </form>
-  </section>
+      <div class="column">
+        <Temporizador :disabled="descricao.length === 0" @aoTemporizadorFinalizado="finalizarTarefa"/>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue"
+import Temporizador from '@/components/Temporizador.vue'
 import { useStore } from "@/store";
-import useNotificador from '@/hooks/notificador'
-import { ADICIONA_PROJETOS, ALTERA_PROJETO } from '@/store/tipo-mutacoes'
-import { TipoNotificacao } from "@/interfaces/INotificacao";
-// import { notificacaoMixin } from '@/minixs/notificar'
+import { ADICIONA_TAREFA } from "@/store/tipo-mutacoes"
 
 export default defineComponent({
-  name: "Formulario",
-  props: {
-    id: {
-      type: String,
-    }
-  },
-
-  // mixins: [notificacaoMixin],
-
-  mounted () {
-    if (this.id) {
-      const projeto = this.store.state.projetos.find(proj => proj.id == this.id)
-      this.nomeDoProjeto = projeto?.nome || ''
-    }
+  name: "Formulário",
+  emits: ['aoSalvarTarefa'],
+  components: {
+    Temporizador
   },
   data () {
     return {
-      nomeDoProjeto: '',
-    };
+      idProjeto: '',
+      descricao: '',
+      cronometroDesabilitado: true,
+    }
   },
-
   methods: {
-    async salvar () {
-      if (this.nomeDoProjeto == '') {
-        this.notificar(TipoNotificacao.FALHA, 'Ops!', 'Informe o nome do projeto.')
-        return false
-      }
-
-      if (this.id) {
-        this.store.commit(ALTERA_PROJETO, {
-          id: this.id,
-          nome: this.nomeDoProjeto
-        })
-      }
-      else {
-        this.store.commit(ADICIONA_PROJETOS, this.nomeDoProjeto)
-      }
-
-      this.nomeDoProjeto = ''
-      this.notificar(TipoNotificacao.SUCESSO, 'Boaaa!', 'O projeto foi cadastrado com sucesso ;)')
-
-      this.$router.push('/projetos')
-    }, 
+    finalizarTarefa(tempoDecorrido: number) : void {
+      this.store.commit(ADICIONA_TAREFA, {
+        duracaoEmSegundos: tempoDecorrido,
+        descricao: this.descricao,
+        projeto: this.projetos.find(proj => proj.id == this.idProjeto)
+      })
+      
+      this.descricao = ''
+    }
   },
-
   setup () {
-    const store = useStore()
-    const { notificar } = useNotificador()
-
+    const store = useStore()    
+    
     return {
       store,
-      notificar
+      projetos: computed(() => store.state.projetos)
     }
   }
 });
 </script>
-
-<style scoped>
-.label {
-  color:var(--texto-primario);
+<style>
+.formulario {
+  color: var(--texto-primario);
+  background-color: var(--bg-primario);
 }
 </style>
