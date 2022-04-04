@@ -5,13 +5,25 @@
         <label for="nomeDoProjeto" class="label">Nome do Projeto</label>
         <input
           type="text"
-          class="input"
+          class="input "
           v-model="nomeDoProjeto"
           id="nomeDoProjeto"
         />
       </div>
-      <div class="field">
-        <button class="button" type="submit">Salvar</button>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-link" type="submit">Salvar</button>
+        </div>
+        <div class="control">
+          <button 
+            class="button is-link is-light" 
+            type="button"
+            @click="this.$router.push('/projetos')"
+          >
+            Voltar
+          </button>
+        </div>
       </div>
     </form>
   </section>
@@ -48,7 +60,12 @@ export default defineComponent({
   },
 
   methods: {
-    salvar () {
+    async salvar () {
+      if (this.nomeDoProjeto == '') {
+        this.notificar(TipoNotificacao.FALHA, 'Ops!', 'Informe o nome do projeto.')
+        return false
+      }
+
       if (this.id) {
         this.store.commit(ALTERA_PROJETO, {
           id: this.id,
@@ -77,3 +94,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+.label {
+  color:var(--texto-primario);
+}
+</style>

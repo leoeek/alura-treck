@@ -1,80 +1,102 @@
 <template>
-  <div class="box formulario">
-    <div class="columns">
-      <div
-        class="column is-5"
-        role="form"
-        aria-label="Formulário para criação de uma nova tarefa"
-      >
+  <section>
+    <form @submit.prevent="salvar">
+      <div class="field">
+        <label for="nomeDoProjeto" class="label">Nome do Projeto</label>
         <input
           type="text"
-          class="input"
-          placeholder="Qual tarefa você deseja iniciar?"
-          v-model="descricao"
+          class="input "
+          v-model="nomeDoProjeto"
+          id="nomeDoProjeto"
         />
       </div>
-      <div class="column is-3">
-        <div class="select">
-          <select v-model="idProjeto">
-            <option value="">Selecione o projeto</option>
-            <option 
-              :value="projeto.id"
-              v-for="projeto in projetos"
-              :key="projeto.id"
-            >
-              {{ projeto.nome }}
-            </option>
-          </select>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-link" type="submit">Salvar</button>
+        </div>
+        <div class="control">
+          <button 
+            class="button is-link is-light" 
+            type="button"
+            @click="this.$router.push('/projetos')"
+          >
+            Voltar
+          </button>
         </div>
       </div>
-      <div class="column">
-        <Temporizador @aoTemporizadorFinalizado="finalizarTarefa"/>
-      </div>
-    </div>
-  </div>
+    </form>
+  </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue"
-import Temporizador from '@/components/Temporizador.vue'
-import { useStore } from 'vuex'
-import { key } from '@/store'
+import { defineComponent } from "vue";
+import { useStore } from "@/store";
+import useNotificador from '@/hooks/notificador'
+import { ADICIONA_PROJETOS, ALTERA_PROJETO } from '@/store/tipo-mutacoes'
+import { TipoNotificacao } from "@/interfaces/INotificacao";
+// import { notificacaoMixin } from '@/minixs/notificar'
 
 export default defineComponent({
-  name: "Formulário",
-  emits: ['aoSalvarTarefa'],
-  components: {
-    Temporizador
+  name: "Formulario",
+  props: {
+    id: {
+      type: String,
+    }
+  },
+
+  // mixins: [notificacaoMixin],
+
+  mounted () {
+    if (this.id) {
+      const projeto = this.store.state.projetos.find(proj => proj.id == this.id)
+      this.nomeDoProjeto = projeto?.nome || ''
+    }
   },
   data () {
     return {
-      idProjeto: '',
-      descricao: '',
-    }
+      nomeDoProjeto: '',
+    };
   },
+
   methods: {
-    finalizarTarefa (tempoDecorrido: number) : void {
-      this.$emit('aoSalvarTarefa', {
-        duracaoEmSegundos: tempoDecorrido,
-        descricao: this.descricao,
-        projeto: this.projetos.find(proj => proj.id == this.idProjeto)
-      })
-      
-      this.descricao = ''
-    }
+    async salvar () {
+      if (this.nomeDoProjeto == '') {
+        this.notificar(TipoNotificacao.FALHA, 'Ops!', 'Informe o nome do projeto.')
+        return false
+      }
+
+      if (this.id) {
+        this.store.commit(ALTERA_PROJETO, {
+          id: this.id,
+          nome: this.nomeDoProjeto
+        })
+      }
+      else {
+        this.store.commit(ADICIONA_PROJETOS, this.nomeDoProjeto)
+      }
+
+      this.nomeDoProjeto = ''
+      this.notificar(TipoNotificacao.SUCESSO, 'Boaaa!', 'O projeto foi cadastrado com sucesso ;)')
+
+      this.$router.push('/projetos')
+    }, 
   },
+
   setup () {
-    const store = useStore(key)
-    
+    const store = useStore()
+    const { notificar } = useNotificador()
+
     return {
-      projetos: computed(() => store.state.projetos)
+      store,
+      notificar
     }
   }
 });
 </script>
-<style>
-.formulario {
-  color: var(--texto-primario);
-  background-color: var(--bg-primario);
+
+<style scoped>
+.label {
+  color:var(--texto-primario);
 }
 </style>
