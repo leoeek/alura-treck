@@ -8,20 +8,21 @@
           {{ textoBotao }}
         </button>
       </div>
-      <nav class="panel mt-5">
-        <ul>
-          <li>
-            <router-link to="/" class="link">
-              <i class="fas fa-tasks"></i> tarefas              
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/projetos" class="link">
-              <i class="fas fa-project-diagram"></i> projetos              
-            </router-link>
-          </li>
+
+      <aside class="menu mt-6">
+        <ul class="menu-list">
+            <li>
+              <router-link to="/" class="link">
+                <i class="fas fa-tasks"></i> Tarefas              
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/projetos" class="link">
+                <i class="fas fa-project-diagram"></i> Projetos              
+              </router-link>
+            </li>
         </ul>
-      </nav>
+      </aside>
   </header>
 </template>
 
@@ -67,10 +68,16 @@ header {
     height: auto;
   }
 }
-.panel li {
-  margin: 8px 0;
+.menu-list {
   text-align: left;
 }
+/* .panel li {
+  margin: 16px 0;
+  text-align: left;
+}
+.panel li i {
+  margin-right: 14px;
+} */
 .link {
   color: #FFF;
 }
@@ -78,6 +85,10 @@ header {
   color: #FAF0CA;
 }
 .link.router-link-active {
-  color: #FAF0CA;
+  color: #be9b0f;
+}
+.menu-list li a:hover {
+    background-color: #0086c6;
+    color: #FFF;
 }
 </style>

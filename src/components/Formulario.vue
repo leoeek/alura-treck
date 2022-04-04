@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="column">
-        <Temporizador @aoTemporizadorFinalizado="finalizarTarefa"/>
+        <Temporizador :disabled="descricao.length === 0" @aoTemporizadorFinalizado="finalizarTarefa"/>
       </div>
     </div>
   </div>
@@ -50,6 +50,7 @@ export default defineComponent({
     return {
       idProjeto: '',
       descricao: '',
+      cronometroDesabilitado: true,
     }
   },
   methods: {
@@ -65,6 +66,8 @@ export default defineComponent({
   },
   setup () {
     const store = useStore(key)
+
+    
     
     return {
       projetos: computed(() => store.state.projetos)
