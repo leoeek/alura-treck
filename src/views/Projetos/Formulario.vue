@@ -33,9 +33,8 @@
 import { defineComponent } from "vue";
 import { useStore } from "@/store";
 import useNotificador from '@/hooks/notificador'
-import { ADICIONA_PROJETOS, ALTERA_PROJETO } from '@/store/tipo-mutacoes'
 import { TipoNotificacao } from "@/interfaces/INotificacao";
-// import { notificacaoMixin } from '@/minixs/notificar'
+import { ATUALIZAR_PROJETOS, CADASTRAR_PROJETOS } from "@/store/tipo-acoes";
 
 export default defineComponent({
   name: "Formulario",
@@ -44,8 +43,6 @@ export default defineComponent({
       type: String,
     }
   },
-
-  // mixins: [notificacaoMixin],
 
   mounted () {
     if (this.id) {
@@ -67,19 +64,24 @@ export default defineComponent({
       }
 
       if (this.id) {
-        this.store.commit(ALTERA_PROJETO, {
+        this.store.dispatch(ATUALIZAR_PROJETOS, {
           id: this.id,
           nome: this.nomeDoProjeto
         })
+        .then(() => {
+            this.nomeDoProjeto = ''
+            this.notificar(TipoNotificacao.SUCESSO, 'Boaaa!', 'O projeto foi atualizado com sucesso ;)')
+            this.$router.push('/projetos')
+          })
       }
       else {
-        this.store.commit(ADICIONA_PROJETOS, this.nomeDoProjeto)
+        this.store.dispatch(CADASTRAR_PROJETOS, this.nomeDoProjeto)
+          .then(() => {
+            this.nomeDoProjeto = ''
+            this.notificar(TipoNotificacao.SUCESSO, 'Boaaa!', 'O projeto foi cadastrado com sucesso ;)')
+            this.$router.push('/projetos')
+          })
       }
-
-      this.nomeDoProjeto = ''
-      this.notificar(TipoNotificacao.SUCESSO, 'Boaaa!', 'O projeto foi cadastrado com sucesso ;)')
-
-      this.$router.push('/projetos')
     }, 
   },
 

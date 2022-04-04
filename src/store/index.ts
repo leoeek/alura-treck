@@ -2,6 +2,7 @@ import { createStore, Store, useStore as vuexUseStore } from "vuex";
 import { InjectionKey } from "vue";
 import IProjeto from "@/interfaces/IProjeto";
 import ITarefa from "@/interfaces/ITarefa";
+import http from '@/http'
 
 import { 
     ADICIONA_PROJETOS, 
@@ -10,9 +11,12 @@ import {
     ADICIONA_TAREFA,
     ATUALIZA_TAREFA,
     REMOVE_TAREFA, 
-    NOTIFICAR
+    NOTIFICAR,
+    DEFINIR_PROJETOS,
+    DEFINIR_TAREFAS
 } from './tipo-mutacoes'
 import { INotificacao } from "@/interfaces/INotificacao";
+import { ATUALIZAR_PROJETOS, CADASTRAR_PROJETOS, REMOVER_PROJETOS, OBTER_PROJETOS, OBTER_TAREFAS } from "./tipo-acoes";
 
 interface Estado {
     projetos: IProjeto[],
@@ -44,6 +48,9 @@ export const store = createStore<Estado>({
         [EXCLUIR_PROJETO](state, id: string) {
             state.projetos = state.projetos.filter(proj => proj.id != id)
         },
+        [DEFINIR_PROJETOS](state, projetos: IProjeto[]) {
+            state.projetos = projetos
+        },
 
         [ADICIONA_TAREFA](state, tarefa: ITarefa) { 
             tarefa.id = new Date().toISOString()
@@ -56,6 +63,9 @@ export const store = createStore<Estado>({
         [REMOVE_TAREFA] (state, id: string) {
             state.projetos = state.projetos.filter(p => p.id != id)
         },
+        [DEFINIR_TAREFAS](state, tarefas: ITarefa[]) {
+            state.tarefas = tarefas
+        },
 
         [NOTIFICAR](state, novaNotificacao: INotificacao) {
             novaNotificacao.id = new Date().getTime()
@@ -67,6 +77,29 @@ export const store = createStore<Estado>({
             }, 3000)
         },
 
+    }, 
+
+    actions: {
+        [OBTER_PROJETOS]({ commit }) {
+            http.get('/projetos')
+                .then(response => commit(DEFINIR_PROJETOS, response.data))
+        },
+        [CADASTRAR_PROJETOS](contexto, nomeDoProjeto: string) {
+            return http.post('/projetos', {
+                nome: nomeDoProjeto
+            })
+        },
+        [ATUALIZAR_PROJETOS](contexto, projeto: IProjeto) {
+            return http.put(`/projetos/${projeto.id}`, projeto)
+        },
+        [REMOVER_PROJETOS](contexto, id: number) {
+            return http.delete(`/projetos/${id}`)
+                .then(() => this.commit(EXCLUIR_PROJETO, id))
+        },
+        [OBTER_TAREFAS](contexto, id: number) {
+            return http.get('/tarefas')
+                .then(response => this.commit(DEFINIR_TAREFAS, response.data))
+        }
     }
 })
 

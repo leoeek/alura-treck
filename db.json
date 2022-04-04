@@ -1,0 +1,23 @@
+{
+  "projetos": [
+    {
+      "id": 1,
+      "nome": "Nome do Projeto 11"
+    },
+    {
+      "id": 2,
+      "nome": "Segundo projeto"
+    }
+  ],
+  "tarefas": [
+    {
+      "id": 1,
+      "duracaoEmSegundos": 122,
+      "descricao": "Configuração",
+      "projeto": {
+        "id": 2,
+        "nome": "Segundo projeto"
+      }
+    }
+  ]
+}
