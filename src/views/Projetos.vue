@@ -15,9 +15,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.title {
-  color:var(--texto-primario);
-}
 .projetos {
   padding: 1.25rem;
 }

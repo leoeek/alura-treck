@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, useAttrs, VueElement } from 'vue'
 import App from './App.vue'
 
 import '@fortawesome/fontawesome-free/css/all.css'

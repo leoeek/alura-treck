@@ -47,11 +47,10 @@ export default defineComponent({
 <style scoped>
 .notificacoes {
     position: absolute;
-    left: 50%;
+    right: 0;
     top: 0;
     z-index: 120;
     padding: 8px;
-    width: 400px;
-    margin-left: -150px;
+    width: 300px;
 }
 </style>
