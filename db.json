@@ -7,17 +7,48 @@
     {
       "id": 2,
       "nome": "Segundo projeto"
+    },
+    {
+      "id": 3,
+      "nome": "Projeto Novo 2"
     }
   ],
   "tarefas": [
     {
       "id": 1,
       "duracaoEmSegundos": 122,
-      "descricao": "Configuração",
+      "descricao": "Configuração Básica 1",
       "projeto": {
         "id": 2,
         "nome": "Segundo projeto"
       }
+    },
+    {
+      "duracaoEmSegundos": 3,
+      "descricao": "Refactoring Vuex - Teste",
+      "projeto": {
+        "id": 1,
+        "nome": "Nome do Projeto 11"
+      },
+      "id": 2
+    },
+    {
+      "duracaoEmSegundos": 2,
+      "descricao": "Treinamento de VueJS 3",
+      "projeto": {
+        "id": 2,
+        "nome": "Segundo projeto"
+      },
+      "id": 3
+    },
+    {
+      "duracaoEmSegundos": 1,
+      "descricao": "Testando mais uma tarefa",
+      "projeto": {
+        "id": 3,
+        "nome": "Projeto Novo 2"
+      },
+      "id": 4
     }
   ]
 }

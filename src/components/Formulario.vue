@@ -55,7 +55,7 @@ export default defineComponent({
   },
   methods: {
     finalizarTarefa(tempoDecorrido: number) : void {
-      this.store.commit(ADICIONA_TAREFA, {
+      this.$emit('aoSalvarTarefa', {
         duracaoEmSegundos: tempoDecorrido,
         descricao: this.descricao,
         projeto: this.projetos.find(proj => proj.id == this.idProjeto)
@@ -69,7 +69,7 @@ export default defineComponent({
     
     return {
       store,
-      projetos: computed(() => store.state.projetos)
+      projetos: computed(() => store.state.projeto.projetos)
     }
   }
 });
