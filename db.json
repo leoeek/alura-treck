@@ -1,16 +1,12 @@
 {
   "projetos": [
     {
-      "id": 1,
-      "nome": "Nome do Projeto 1"
-    },
-    {
       "id": 2,
-      "nome": "Segundo projeto 111"
+      "nome": "Projeto 2"
     },
     {
       "id": 3,
-      "nome": "Projeto Novo 2"
+      "nome": "Projeto Final"
     }
   ],
   "tarefas": [
@@ -34,7 +30,7 @@
     },
     {
       "duracaoEmSegundos": 2,
-      "descricao": "Treinamento de VueJS 3",
+      "descricao": "Treinamento de Vue",
       "projeto": {
         "id": 2,
         "nome": "Segundo projeto"
@@ -52,7 +48,7 @@
     },
     {
       "duracaoEmSegundos": 2,
-      "descricao": "teste 111",
+      "descricao": "Nova tarefa cadastrada",
       "projeto": {
         "id": 2,
         "nome": "Segundo projeto 111"
