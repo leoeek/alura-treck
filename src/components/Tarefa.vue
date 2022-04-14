@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, ref } from "vue";
 import Cronometro from "./Cronometro.vue";
 import ITarefa from '../interfaces/ITarefa'
 import Box from './Box.vue'
@@ -29,9 +29,14 @@ export default defineComponent({
       required: true
     }
   },
-  methods: {
-    tarefaClicada () : void {
-      this.$emit('aoTarefaClicada', this.tarefa)
+
+  setup (props, { emit }) {
+    const tarefaClicada = () : void => {
+      emit('aoTarefaClicada', props.tarefa)
+    }
+
+    return {
+      tarefaClicada
     }
   }
 });

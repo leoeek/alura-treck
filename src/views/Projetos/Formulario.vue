@@ -30,11 +30,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { useStore } from "@/store";
 import useNotificador from '@/hooks/notificador'
 import { TipoNotificacao } from "@/interfaces/INotificacao";
 import { ATUALIZAR_PROJETOS, CADASTRAR_PROJETOS } from "@/store/tipo-acoes";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Formulario",
@@ -44,54 +45,45 @@ export default defineComponent({
     }
   },
 
-  mounted () {
-    if (this.id) {
-      const projeto = this.store.state.projeto.projetos.find(proj => proj.id == this.id)
-      this.nomeDoProjeto = projeto?.nome || ''
+  setup (props) {
+    const router = useRouter()
+    const store = useStore()
+    const { notificar } = useNotificador()
+    const nomeDoProjeto = ref('')
+    
+    if (props.id) {
+      const projeto = store.state.projeto.projetos.find(proj => proj.id == props.id)
+      nomeDoProjeto.value = projeto?.nome || ''
     }
-  },
-  data () {
-    return {
-      nomeDoProjeto: '',
-    };
-  },
 
-  methods: {
-    async salvar () {
-      if (this.nomeDoProjeto == '') {
-        this.notificar(TipoNotificacao.FALHA, 'Ops!', 'Informe o nome do projeto.')
+    const lidarComSucesso = () => {
+      nomeDoProjeto.value = ''
+      notificar(TipoNotificacao.SUCESSO, 'Boaaa!', 'O projeto foi cadastrado com sucesso ;)')
+      router.push('/projetos')
+    }
+
+    const salvar = () => {
+      if (nomeDoProjeto.value == '') {
+        notificar(TipoNotificacao.FALHA, 'Ops!', 'Informe o nome do projeto.')
         return false
       }
 
-      if (this.id) {
-        this.store.dispatch(ATUALIZAR_PROJETOS, {
-          id: this.id,
-          nome: this.nomeDoProjeto
+      if (props.id) {
+        store.dispatch(ATUALIZAR_PROJETOS, {
+          id: props.id,
+          nome: nomeDoProjeto.value
         })
-        .then(() => {
-            this.nomeDoProjeto = ''
-            this.notificar(TipoNotificacao.SUCESSO, 'Boaaa!', 'O projeto foi atualizado com sucesso ;)')
-            this.$router.push('/projetos')
-          })
+        .then(() => lidarComSucesso())
       }
       else {
-        this.store.dispatch(CADASTRAR_PROJETOS, this.nomeDoProjeto)
-          .then(() => {
-            this.nomeDoProjeto = ''
-            this.notificar(TipoNotificacao.SUCESSO, 'Boaaa!', 'O projeto foi cadastrado com sucesso ;)')
-            this.$router.push('/projetos')
-          })
+        store.dispatch(CADASTRAR_PROJETOS, nomeDoProjeto.value)
+          .then(() => lidarComSucesso())
       }
-    }, 
-  },
-
-  setup () {
-    const store = useStore()
-    const { notificar } = useNotificador()
+    }
 
     return {
-      store,
-      notificar
+      nomeDoProjeto,
+      salvar,
     }
   }
 });

@@ -28,17 +28,16 @@
         </div>
       </div>
       <div class="column">
-        <Temporizador :disabled="descricao.length === 0" @aoTemporizadorFinalizado="finalizarTarefa"/>
+        <Temporizador :disabled="descricao.length === 0" @aoTemporizadorFinalizado="salvarTarefa"/>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue"
+import { defineComponent, computed, ref } from "vue"
 import Temporizador from '@/components/Temporizador.vue'
 import { useStore } from "@/store";
-import { ADICIONA_TAREFA } from "@/store/tipo-mutacoes"
 
 export default defineComponent({
   name: "Formulário",
@@ -46,30 +45,32 @@ export default defineComponent({
   components: {
     Temporizador
   },
-  data () {
-    return {
-      idProjeto: '',
-      descricao: '',
-      cronometroDesabilitado: true,
-    }
-  },
+
   methods: {
-    finalizarTarefa(tempoDecorrido: number) : void {
-      this.$emit('aoSalvarTarefa', {
+    
+  },
+  setup (props, contexto) {
+    const store = useStore()    
+    const descricao = ref('')
+    const idProjeto = ref('')
+    const projetos = computed(() => store.state.projeto.projetos)
+
+    const salvarTarefa = (tempoDecorrido: number) : void => {
+      contexto.emit('aoSalvarTarefa', {
         duracaoEmSegundos: tempoDecorrido,
-        descricao: this.descricao,
-        projeto: this.projetos.find(proj => proj.id == this.idProjeto)
+        descricao: descricao.value,
+        projeto: projetos.value.find(proj => proj.id == idProjeto.value)
       })
       
-      this.descricao = ''
+      descricao.value = ''
     }
-  },
-  setup () {
-    const store = useStore()    
     
     return {
       store,
-      projetos: computed(() => store.state.projeto.projetos)
+      descricao,
+      idProjeto,
+      projetos,
+      salvarTarefa
     }
   }
 });

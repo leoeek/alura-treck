@@ -2,11 +2,11 @@
   "projetos": [
     {
       "id": 1,
-      "nome": "Nome do Projeto 11"
+      "nome": "Nome do Projeto 1"
     },
     {
       "id": 2,
-      "nome": "Segundo projeto"
+      "nome": "Segundo projeto 111"
     },
     {
       "id": 3,
@@ -49,6 +49,15 @@
         "nome": "Projeto Novo 2"
       },
       "id": 4
+    },
+    {
+      "duracaoEmSegundos": 2,
+      "descricao": "teste 111",
+      "projeto": {
+        "id": 2,
+        "nome": "Segundo projeto 111"
+      },
+      "id": 5
     }
   ]
 }
